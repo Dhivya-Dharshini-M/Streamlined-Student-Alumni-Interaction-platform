@@ -1,0 +1,124 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #0078d7;
+    padding: 15px 20px;
+    color: white;
+}
+
+header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+header .nav-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+header .nav-links li {
+    display: inline;
+}
+
+header .nav-links a {
+    text-decoration: none;
+    color: white;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #0078d7;
+}
+
+.project-list .project-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background: #f1f1f1;
+    position: relative;
+}
+
+.project-list .project-item h3 {
+    margin: 0 0 5px;
+}
+
+.project-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+button.delete-project {
+    background-color: #d9534f;
+}
+
+button.delete-project:hover {
+    background-color: #b52a27;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 15px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.nav-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 5px;
+}
+.download-btn {
+    background-color: #28a745;
+    color: white;
+}

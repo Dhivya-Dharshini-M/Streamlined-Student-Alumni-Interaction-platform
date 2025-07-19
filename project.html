@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Project - Alumni Portal</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Alumni Portal</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="uploaded-projects.html">Uploaded Projects</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Upload Project</h1>
+        <section class="upload-section">
+            <form id="uploadForm">
+                <input type="text" id="projectName" placeholder="Project Name" required>
+                <input type="text" id="uploaderName" placeholder="Your Name" required>
+                <textarea id="description" placeholder="Project Description" rows="3" required></textarea>
+                <input type="file" id="projectFile" required>
+                <button type="submit">Upload</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        let db;
+        const request = indexedDB.open("ProjectDatabase", 1);
+        request.onupgradeneeded = function(event) {
+            let db = event.target.result;
+            if (!db.objectStoreNames.contains("projects")) {
+                db.createObjectStore("projects", { keyPath: "id", autoIncrement: true });
+            }
+        };
+        request.onsuccess = function(event) {
+            db = event.target.result;
+        };
+        request.onerror = function(event) {
+            console.error("IndexedDB Error:", event.target.errorCode);
+        };
+
+        const uploadForm = document.getElementById('uploadForm');
+
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('projectName').value;
+            const uploader = document.getElementById('uploaderName').value;
+            const description = document.getElementById('description').value;
+            const fileInput = document.getElementById('projectFile');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const fileData = event.target.result;
+
+                let transaction = db.transaction(["projects"], "readwrite");
+                let store = transaction.objectStore("projects");
+                let newProject = {
+                    name,
+                    uploader,
+                    description,
+                    fileName: file.name,
+                    fileData
+                };
+
+                store.add(newProject);
+                transaction.oncomplete = function() {
+                    uploadForm.reset();
+                    alert("Project uploaded successfully!");
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>

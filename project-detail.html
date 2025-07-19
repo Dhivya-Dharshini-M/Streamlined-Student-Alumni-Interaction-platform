@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Alumni Portal</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="project.html">Projects</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Project Details</h1>
+        <section class="details">
+            <h2 id="projectTitle"></h2>
+            <p><strong>Uploaded By:</strong> <span id="uploaderName"></span></p>
+            <p><strong>Description:</strong> <span id="projectDescription"></span></p>
+        </section>
+    </main>
+
+    <script>
+        // Load project details from localStorage
+        const project = JSON.parse(localStorage.getItem('currentProject'));
+
+        if (project) {
+            document.getElementById('projectTitle').innerText = project.name;
+            document.getElementById('uploaderName').innerText = project.uploader;
+            document.getElementById('projectDescription').innerText = project.description;
+            document.getElementById('projectFile').innerText = project.fileName;
+            document.getElementById('projectFile').href = project.fileURL;
+        } else {
+            document.querySelector('.details').innerHTML = "<p>No project selected.</p>";
+        }
+    </script>
+</body>
+</html>

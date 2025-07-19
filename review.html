@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Feedback & Review</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .stars i {
+            font-size: 30px;
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        .stars i.active {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Alumni Feedback & Review</h2>
+
+    <!-- Feedback Form -->
+    <div class="card p-4 mb-4">
+        <h4>Submit Your Feedback</h4>
+        <form id="feedbackForm">
+            <div class="mb-3">
+                <label class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Batch Year</label>
+                <input type="text" class="form-control" id="batch" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Your Feedback</label>
+                <textarea class="form-control" id="feedback" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rate Your Experience</label>
+                <div class="stars" id="starRating">
+                    <i class="bi bi-star-fill" data-value="1"></i>
+                    <i class="bi bi-star-fill" data-value="2"></i>
+                    <i class="bi bi-star-fill" data-value="3"></i>
+                    <i class="bi bi-star-fill" data-value="4"></i>
+                    <i class="bi bi-star-fill" data-value="5"></i>
+                </div>
+                <input type="hidden" id="rating" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+    </div>
+
+    <!-- Reviews Section -->
+    <h4 class="mb-3">Alumni Reviews</h4>
+    <div id="reviews"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        let selectedRating = 0;
+
+        // Star rating selection with filled color effect
+        $("#starRating i").click(function() {
+            selectedRating = $(this).data("value");
+            $("#rating").val(selectedRating);
+
+            $("#starRating i").removeClass("active");
+            $("#starRating i").each(function() {
+                if ($(this).data("value") <= selectedRating) {
+                    $(this).addClass("active");
+                }
+            });
+        });
+
+        // Handle form submission
+        $("#feedbackForm").submit(function(e) {
+            e.preventDefault();
+
+            let name = $("#name").val();
+            let batch = $("#batch").val();
+            let feedback = $("#feedback").val();
+            let rating = $("#rating").val();
+
+            if (name && batch && feedback && rating) {
+                let starsHtml = "";
+                for (let i = 1; i <= 5; i++) {
+                    starsHtml += `<i class="bi ${i <= rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'}"></i>`;
+                }
+
+                let reviewHtml = `
+                    <div class="card mb-3 p-3">
+                        <h5>${name} <small class="text-muted">(${batch})</small></h5>
+                        <p>${feedback}</p>
+                        <div>${starsHtml}</div>
+                    </div>
+                `;
+                $("#reviews").prepend(reviewHtml);
+
+                $("#feedbackForm")[0].reset();
+                $("#starRating i").removeClass("active");
+                selectedRating = 0;
+            }
+        });
+    });
+</script>
+
+<!-- Bootstrap Icons for Star Rating -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+</body>
+</html>

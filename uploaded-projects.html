@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Projects - Alumni Portal</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Alumni Portal</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Uploaded Projects</h1>
+        <section id="projects" class="project-list">
+            <div id="projectContainer"></div>
+        </section>
+    </main>
+
+    <script>
+        let db;
+
+        const request = indexedDB.open("ProjectDatabase", 1);
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            loadProjects();
+        };
+        request.onerror = function(event) {
+            console.error("IndexedDB Error:", event.target.errorCode);
+        };
+
+        const projectContainer = document.getElementById('projectContainer');
+
+        function loadProjects() {
+            projectContainer.innerHTML = "";
+            let transaction = db.transaction(["projects"], "readonly");
+            let store = transaction.objectStore("projects");
+            let request = store.getAll();
+
+            request.onsuccess = function(event) {
+                let projects = event.target.result;
+                projects.forEach((project) => {
+                    let projectItem = document.createElement("div");
+                    projectItem.classList.add("project-item");
+                    projectItem.innerHTML = `
+                        <h3>${project.name}</h3>
+                        <p>Uploaded By: ${project.uploader}</p>
+                        <p>${project.description}</p>
+                        <div class="project-buttons">
+                            <button class="view-details" onclick="viewDetails(${project.id})">View Details</button>
+                            <button class="download-btn" onclick="downloadFile(${project.id})">Download</button>
+                            <button class="delete-project" onclick="deleteProject(${project.id})">Delete</button>
+                        </div>
+                    `;
+                    projectContainer.appendChild(projectItem);
+                });
+            };
+        }
+
+        function downloadFile(projectId) {
+            let transaction = db.transaction(["projects"], "readonly");
+            let store = transaction.objectStore("projects");
+            let request = store.get(projectId);
+
+            request.onsuccess = function(event) {
+                let project = event.target.result;
+                if (!project || !project.fileData) {
+                    alert("No file available to download.");
+                    return;
+                }
+
+                const a = document.createElement('a');
+                a.href = project.fileData;
+                a.download = project.fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+        }
+
+        function deleteProject(projectId) {
+            let transaction = db.transaction(["projects"], "readwrite");
+            let store = transaction.objectStore("projects");
+            store.delete(projectId);
+
+            transaction.oncomplete = function() {
+                loadProjects();
+            };
+        }
+
+        function viewDetails(projectId) {
+            let transaction = db.transaction(["projects"], "readonly");
+            let store = transaction.objectStore("projects");
+            let request = store.get(projectId);
+
+            request.onsuccess = function(event) {
+                let project = event.target.result;
+                localStorage.setItem('currentProject', JSON.stringify(project));
+                window.location.href = 'project-detail.html';
+            };
+        }
+    </script>
+</body>
+</html>

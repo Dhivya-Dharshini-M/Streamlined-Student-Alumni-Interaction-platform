@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Alumni Portal</title>
+  <link rel="stylesheet" href="alumni.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Alumni Portal</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="dashboard.html" id="logoutLink" style="display: none;">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="about">
+      <h1>About Our Alumni</h1>
+      <p class="intro">Our alumni are an integral part of our community, making significant contributions in various fields. Here's a glimpse into their achievements and journeys.</p>
+
+      <h1>Total Alumni Registered: <span id="alumniCount">0</span></h1>
+      <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="searchAlumni()">
+      <div id="alumniList" class="alumni-list"></div>
+    </section>
+
+    <section id="updateForm" style="display: none;">
+      <h2>Edit Alumni Details</h2>
+      <form id="editAlumniForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName"><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName"><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" readonly><br>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone"><br>
+        <label for="graduationYear">Graduation Year:</label>
+        <input type="number" id="graduationYear" name="graduationYear"><br>
+        <label for="degree">Degree:</label>
+        <input type="text" id="degree" name="degree"><br>
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department"><br>
+        <label for="currentJob">Current Job:</label>
+        <input type="text" id="currentJob" name="currentJob"><br>
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company"><br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location"><br>
+        <label for="bio">Bio:</label>
+        <textarea id="bio" name="bio"></textarea><br>
+        <button type="submit">Update</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>&copy; 2024 Alumni Portal. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+      const alumniContainer = document.getElementById('alumniList');
+      const alumniCount = document.getElementById('alumniCount');
+      const updateForm = document.getElementById('updateForm');
+      let alumniList = [];
+      let editingIndex = -1;
+
+      const loggedInEmail = sessionStorage.getItem('userEmail'); // User login email
+
+      async function fetchAlumni() {
+        try {
+          const response = await fetch('http://localhost:5000/getAlumniData');
+          if (!response.ok) throw new Error('Failed to fetch alumni data');
+          alumniList = await response.json();
+
+          displayAlumni();
+          alumniCount.textContent = alumniList.length;
+        } catch (error) {
+          console.error('Error fetching alumni data:', error);
+        }
+      }
+
+      function searchAlumni() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const filteredAlumni = alumniList.filter(alumni =>
+          alumni.firstName.toLowerCase().includes(searchValue) ||
+          alumni.lastName.toLowerCase().includes(searchValue)
+        );
+        displayAlumni(filteredAlumni);
+      }
+
+      function displayAlumni(filteredAlumni = alumniList) {
+        alumniContainer.innerHTML = '';
+        if (filteredAlumni.length === 0) {
+          alumniContainer.innerHTML = "<p>No alumni found</p>";
+          return;
+        }
+
+        filteredAlumni.forEach((alumni, index) => {
+          const alumniItem = document.createElement('div');
+          alumniItem.classList.add('alumni-item');
+          alumniItem.innerHTML = `
+            <h2>${alumni.firstName} ${alumni.lastName}</h2>
+            <p><strong>Email:</strong> ${alumni.email}</p>
+            <p><strong>Phone:</strong> ${alumni.phone}</p>
+            <p><strong>Graduation Year:</strong> ${alumni.graduationYear}</p>
+            <p><strong>Degree:</strong> ${alumni.degree}</p>
+            <p><strong>Department:</strong> ${alumni.department}</p>
+            <p><strong>Current Job:</strong> ${alumni.currentJob} at ${alumni.company}</p>
+            <p><strong>Location:</strong> ${alumni.location}</p>
+            <p><strong>Bio:</strong> ${alumni.bio}</p>
+            ${alumni.email === loggedInEmail ? `<button class="update-btn" onclick="editAlumni(${index})">Update</button>` : '<p style="color:red;">You do not have permission to edit this profile.</p>'}
+          `;
+          alumniContainer.appendChild(alumniItem);
+        });
+      }
+
+      function editAlumni(index) {
+        const alumni = alumniList[index];
+
+        if (alumni.email !== loggedInEmail) {
+          alert("You do not have permission to edit this profile.");
+          return;
+        }
+
+        editingIndex = index;
+
+        document.getElementById('firstName').value = alumni.firstName;
+        document.getElementById('lastName').value = alumni.lastName;
+        document.getElementById('email').value = alumni.email;
+        document.getElementById('phone').value = alumni.phone;
+        document.getElementById('graduationYear').value = alumni.graduationYear;
+        document.getElementById('degree').value = alumni.degree;
+        document.getElementById('department').value = alumni.department;
+        document.getElementById('currentJob').value = alumni.currentJob;
+        document.getElementById('company').value = alumni.company;
+        document.getElementById('location').value = alumni.location;
+        document.getElementById('bio').value = alumni.bio;
+
+        updateForm.style.display = 'block';
+      }
+
+      document.getElementById('editAlumniForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        if (editingIndex > -1) {
+          const updatedAlumni = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            graduationYear: document.getElementById('graduationYear').value,
+            degree: document.getElementById('degree').value,
+            department: document.getElementById('department').value,
+            currentJob: document.getElementById('currentJob').value,
+            company: document.getElementById('company').value,
+            location: document.getElementById('location').value,
+            bio: document.getElementById('bio').value,
+          };
+
+          try {
+            const response = await fetch(`http://localhost:5000/updateAlumni/${alumniList[editingIndex]._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updatedAlumni),
+            });
+
+            if (!response.ok) throw new Error('Failed to update alumni data');
+
+            alumniList[editingIndex] = { ...alumniList[editingIndex], ...updatedAlumni };
+            displayAlumni();
+            updateForm.style.display = 'none';
+          } catch (error) {
+            console.error('Error updating alumni data:', error);
+          }
+        }
+      });
+
+      fetchAlumni();
+      const logoutLink = document.getElementById('logoutLink');
+    if (sessionStorage.getItem("userEmail")) {
+        logoutLink.style.display = "inline";
+    }
+
+    // Handle logout
+    logoutLink?.addEventListener('click', function(e) {
+        e.preventDefault();
+        sessionStorage.clear(); // Clear all session data
+        alert("Logged out successfully!");
+        window.location.href = "login.html";
+    });
+
+    </script>
+  </main>
+</body>
+</html>

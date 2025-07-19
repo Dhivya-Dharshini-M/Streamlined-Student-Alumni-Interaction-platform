@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard - Alumni Portal</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+    <style>
+        /* Additional styles for the dashboard */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            background-image: url("https://i.pinimg.com/originals/20/f8/5e/20f85e5f3bd0b8af4d9eca662e878d17.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .dashboard {
+            text-align: center;
+            margin-bottom: 50px;
+            margin-left: 350px;
+        }
+
+
+        .options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            height: 100%;
+        }
+
+
+        .option {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.3s ease;
+            position: relative;
+        }
+
+
+        .option img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+
+        .option:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+
+        .option:nth-child(1) {
+            background: #28a745;
+        }
+
+
+        .option:nth-child(2) {
+            background: #ffc107;
+        }
+
+
+        .option:nth-child(3) {
+            background: #dc3545;
+        }
+
+
+        .option:nth-child(4) {
+            background: #17a2b8; /* New color for Projects */
+        }
+
+
+        .option a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>Welcome to Our Dashboard</h1>
+        <div class="options">
+            <a href="home.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Registration Icon">
+                Home
+            </a>
+            <a href="signup.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="Registration Icon">
+                Registration
+            </a>
+            <a href="login.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/details.png" alt="Alumni Details Icon">
+                Alumni Details
+            </a>
+            <a href="social.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/share.png" alt="Social Media Interaction Icon">
+                Social Media Interaction
+            </a>
+            <a href="plogin.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/project.png" alt="Projects Icon">
+                Projects
+            </a>
+            <a href="uploaded-projects.html" class="option">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/project.png" alt="Projects Icon">
+                Uploaded Projects
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+
+
